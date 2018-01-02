@@ -40,6 +40,12 @@ class Cloudflare {
   public const DNS_RECORD_MX = 'MX';
 
   /**
+   * Do not proxy records by default, since that'd block anything but HTTP(S)
+   * which is not what we typically want for DynDNS.
+   */
+  public const PROXY_RECORDS = false;
+
+  /**
    * Holds the credentials instance
    *
    * @var \Cloudflare\API\Auth\APIKey
@@ -99,7 +105,7 @@ class Cloudflare {
       string $recordName,
       string $content,
       int $ttl = 1,
-      bool $proxied = false
+      bool $proxied = Cloudflare::PROXY_RECORDS
   ) {
     $this->dns->addRecord( $this->getZoneId( $zoneName ), $recordType, $recordName, $content, $ttl, $proxied );
   }
@@ -135,7 +141,7 @@ class Cloudflare {
       string $recordName,
       string $content,
       int $ttl = 1,
-      bool $proxied = false
+      bool $proxied = Cloudflare::PROXY_RECORDS
   ) {
     $record = $this->getRecord( $zoneName, $recordName );
     $this->dns->updateRecordDetails( $this->getZoneId( $zoneName ), $record->id, [
