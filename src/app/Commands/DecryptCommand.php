@@ -21,14 +21,28 @@ class DecryptCommand extends Command {
   protected const ARGUMENT_CIPHER = 'cipher';
 
   /**
+   * Argument cipher description
+   */
+  protected const ARGUMENT_CIPHER_DESCRIPTION = 'Cipher text to decrypt';
+
+  /**
+   * Command description
+   */
+  protected const DESCRIPTION = 'Decrypts a cipher';
+
+  /**
    * @return void
    * @throws \Symfony\Component\Console\Exception\InvalidArgumentException
    */
   protected function configure() {
     parent::configure();
 
-    $this->setDescription( 'Decrypts a cipher' );
-    $this->addArgument( DecryptCommand::ARGUMENT_CIPHER, InputArgument::REQUIRED );
+    $this->setDescription( DecryptCommand::DESCRIPTION );
+    $this->addArgument(
+        DecryptCommand::ARGUMENT_CIPHER,
+        InputArgument::REQUIRED,
+        DecryptCommand::ARGUMENT_CIPHER_DESCRIPTION
+    );
   }
 
   /**

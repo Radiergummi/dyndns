@@ -21,14 +21,28 @@ class EncryptCommand extends Command {
   protected const ARGUMENT_PASSWORD = 'password';
 
   /**
+   * Argument password description
+   */
+  protected const ARGUMENT_PASSWORD_DESCRIPTION = 'Password to encrypt';
+
+  /**
+   * Command description
+   */
+  protected const DESCRIPTION = 'Encrypts a password';
+
+  /**
    * @return void
    * @throws \Symfony\Component\Console\Exception\InvalidArgumentException
    */
   protected function configure() {
     parent::configure();
 
-    $this->setDescription( 'Encrypts a password' );
-    $this->addArgument( EncryptCommand::ARGUMENT_PASSWORD, InputArgument::REQUIRED );
+    $this->setDescription( EncryptCommand::DESCRIPTION );
+    $this->addArgument(
+        EncryptCommand::ARGUMENT_PASSWORD,
+        InputArgument::REQUIRED,
+        EncryptCommand::ARGUMENT_PASSWORD_DESCRIPTION
+    );
   }
 
   /**
