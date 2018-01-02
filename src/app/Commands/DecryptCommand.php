@@ -27,6 +27,7 @@ class DecryptCommand extends Command {
   protected function configure() {
     parent::configure();
 
+    $this->setDescription( 'Decrypts a cipher' );
     $this->addArgument( DecryptCommand::ARGUMENT_CIPHER, InputArgument::REQUIRED );
   }
 

@@ -27,6 +27,7 @@ class EncryptCommand extends Command {
   protected function configure() {
     parent::configure();
 
+    $this->setDescription( 'Encrypts a password' );
     $this->addArgument( EncryptCommand::ARGUMENT_PASSWORD, InputArgument::REQUIRED );
   }
 
