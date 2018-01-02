@@ -8,23 +8,38 @@ namespace Radiergummi\DynDns;
  * @package Radiergummi\DynDns
  */
 abstract class Route {
+
+  /**
+   * Default action method name. This is the method that will be called once your controller
+   * is invoked, if you did not pass an action name.
+   */
   public const    DEFAULT_ACTION = 'index';
 
+  /**
+   * Class identifier for the special lambda handlers (will resolve to LambdaController
+   * and LambdaCommand).
+   */
   protected const LAMBDA_CLASS   = 'lambda';
 
+  /**
+   * Handler parameter for the route constructor
+   */
   protected const PARAM_HANDLER  = 'handler';
 
+  /**
+   * Name parameter for the route constructor
+   */
   protected const PARAM_NAME     = 'name';
 
   /**
-   * holds the route name
+   * Holds the route name
    *
    * @var string
    */
   protected $name;
 
   /**
-   * holds the route handler
+   * Holds the route handler
    *
    * @var \Radiergummi\DynDns\Controller|\Radiergummi\DynDns\Command
    */
@@ -43,7 +58,7 @@ abstract class Route {
   }
 
   /**
-   * retrieves the route name
+   * Retrieves the route name
    *
    * @return string
    */
@@ -52,7 +67,7 @@ abstract class Route {
   }
 
   /**
-   * retrieves the route handler
+   * Retrieves the route handler
    *
    * @return \Radiergummi\DynDns\Controller|\Radiergummi\DynDns\Command
    */
@@ -61,7 +76,7 @@ abstract class Route {
   }
 
   /**
-   * sets the handler
+   * Sets the handler
    *
    * @param string|Callable $handler
    *
@@ -70,7 +85,7 @@ abstract class Route {
   abstract protected function setHandler( $handler );
 
   /**
-   * registers the route on the application kernel
+   * Registers the route on the application kernel
    *
    * @param \Radiergummi\DynDns\Kernel $kernel
    *

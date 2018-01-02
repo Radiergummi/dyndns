@@ -12,42 +12,73 @@ use function is_callable;
  * @package Radiergummi\DynDns
  */
 class WebRoute extends Route {
-  protected const CONTROLLER_NAMESPACE = __NAMESPACE__ . '\\Controllers\\';
-
-  protected const CONTROLLER_SUFFIX    = 'Controller';
-
-  public const    METHOD_DELETE        = 'delete';
-
-  public const    METHOD_GET           = 'get';
-
-  public const    METHOD_OPTIONS       = 'options';
-
-  public const    METHOD_PATCH         = 'patch';
-
-  public const    METHOD_POST          = 'post';
-
-  public const    METHOD_PUT           = 'put';
-
-  protected const PARAM_METHOD         = 'method';
-
-  protected const PARAM_PATH           = 'path';
 
   /**
-   * holds the request method
+   * Namespace path to the controllers namespace
+   */
+  protected const CONTROLLER_NAMESPACE = __NAMESPACE__ . '\\Controllers\\';
+
+  /**
+   * Controller class name suffix
+   */
+  protected const CONTROLLER_SUFFIX = 'Controller';
+
+  /**
+   * DELETE HTTP method
+   */
+  public const    METHOD_DELETE = 'delete';
+
+  /**
+   * GET HTTP method
+   */
+  public const    METHOD_GET = 'get';
+
+  /**
+   * OPTIONS HTTP method
+   */
+  public const    METHOD_OPTIONS = 'options';
+
+  /**
+   * PATCH HTTP method
+   */
+  public const    METHOD_PATCH = 'patch';
+
+  /**
+   * POST HTTP method
+   */
+  public const    METHOD_POST = 'post';
+
+  /**
+   * PUT HTTP method
+   */
+  public const    METHOD_PUT = 'put';
+
+  /**
+   * Method parameter for the route constructor
+   */
+  protected const PARAM_METHOD = 'method';
+
+  /**
+   * Path parameter for the route constructor
+   */
+  protected const PARAM_PATH = 'path';
+
+  /**
+   * Holds the request method
    *
    * @var string
    */
   protected $method;
 
   /**
-   * holds the request path
+   * Holds the request path
    *
    * @var string
    */
   protected $path;
 
   /**
-   * holds the route action
+   * Holds the route action
    *
    * @var string
    */

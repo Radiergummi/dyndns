@@ -14,7 +14,7 @@ use Slim\Container;
 class WebKernel extends Kernel {
 
   /**
-   * holds the Slim (Pimple) Container
+   * Holds the Slim (Pimple) Container
    *
    * @var \Slim\Container
    */
@@ -39,7 +39,7 @@ class WebKernel extends Kernel {
   }
 
   /**
-   * retrieves the WebKernel Container
+   * Retrieves the WebKernel Container
    *
    * @return \Slim\Container
    */
