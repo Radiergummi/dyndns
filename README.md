@@ -147,6 +147,30 @@ In theory, this should work on Windows, too. But I've got no way to test this cu
 ### Lean back and enjoy
 That's it, you're done. Your IP address will be updated automatically, your DNS record points to your home network at all times.
 
+## REST API Endpoints
+You can view a dynamically generated list of these at the `/` page, too.  
+
+| Method | Path                              | Description                        |
+|--------|-----------------------------------|------------------------------------|
+| GET    | `/`                               | Shows a list of all API endpoints  |
+| GET    | `/zones`                          | Retrieves a list of all zones      |
+| GET    | `/zones/{zone}`                   | Retrieves data from a single zone  |
+| GET    | `/zones/{zone}/{hostname}`        | Retrieves a single host DNS record |
+| PUT    | `/zones/{zone}/{hostname}/update` | Updates a DNS record. Must contain fields for 'ipv4' and/or 'ipv6' in the body (or params for GET). |
+| GET    | `/zones/{zone}/{hostname}/update` | Updates a DNS record. Must contain fields for 'ipv4' and/or 'ipv6' in the body (or params for GET). |
+
+*I know that the `/update` is a poor choice, but due to many routers only supporting GET requests, we need to discern between the hostname GET feature and the actual update.*
+
+## CLI Commands
+You can view a list of those using `bin/dyndns list`, too.
+
+| Command        | Description             |
+|----------------|-------------------------|
+| `auth:encrypt` | Encrypts a password     |
+| `auth:decrypt` | Decrypts a cipher       |
+| `update`       | Updates a DynDNS record |
+
+
 ## Security considerations
 There are some things you should be aware of: First, all records created by this tool won't be proxied by Cloudflare. That means the DNS exposes your real IP and can (**and will**) be scraped. Make sure whatever is available on that IP is protected as good as you can.  
 Then, the API token. I went down the path of encryption to make sure you could *theoretically* also use this application via insecure HTTP, since an attacker would need access to your server and read the application secret to decrypt your API key. Please don't do that. Use HTTPS for everything you host, it's 2018, [Let's encrypt](https://letsencrypt.org) works stable by now.  
@@ -160,3 +184,8 @@ I'm thinking of adding additional DNS backends to this tool, for example for a l
 
 ## Developer notes
 The code is thoroughly documented and uses practically no hard coded strings - all of them are defined as class constants so you can hardly break anything by changing those fields. 
+Basically, the `index.php` file is the entry point for both the web server and the CLI. It determines the SAPI mode and loads the appropriate kernel class. All of this is inspired by Laravel, but nowhere near as complex. Both HTTP routes and CLI commands can be defined in the appropriate `routes` file at `src/routes`, in `web.php` (HTTP) and `console.php` (CLI) respectively.  
+There, you'll see both are added using a `Route` class - `WebRoute` and `ConsoleRoute`, which both inherit from `Route`. The whole application is structured like this, with the base class sharing the common properties, constants and methods.  
+In those routes files, you can add your own routes using a simple mechanism: All routes require a `handler`. That is a Controller for web routes and a Command for console routes. This handler needs to be placed in the corresponding directory in the app folder, namely `src/app/Controllers` or `src/app/Commands`. The handler will be resolved by taking the string from the route property, uppercasing the first letter and appending "Console" or "Command" to it. Therefore, a handler named "foo" will be resolved to "FooController" or "FooCommand".  
+You can also add a method by passing `foo@bar`, which will assume `FooController#bar()` as the action handler. If you omit the method, the default `index` will be used.  
+Lastly, there's one specialty - you can also pass a callback instead of a string to the `handler` property. The callback will be wrapped in a special Controller/Command that simply executes the callback. These special handlers are called `LambdaController` and `LambdaCommand` and work practically the same way. They receive the same arguments as all Controllers/Commands do.
