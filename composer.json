@@ -1,0 +1,22 @@
+{
+    "name": "mo/dyndns",
+    "description": "A simple Cloudflare DynDNS implementation",
+    "type": "project",
+    "require": {
+        "slim/slim": "^3.9",
+        "symfony/console": "^4.0",
+        "tuupola/slim-basic-auth": "^2.3",
+        "cloudflare/sdk": "^1.0"
+    },
+    "autoload": {
+      "psr-4": {
+        "Radiergummi\\DynDns\\": "src/app/"
+      }
+    },
+    "authors": [
+        {
+            "name": "Moritz Friedrich",
+            "email": "m@9dev.de"
+        }
+    ]
+}

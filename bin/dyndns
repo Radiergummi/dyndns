@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+directory="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+# Forward all parameters to PHP and the index file
+php "$directory/../index.php" $@
