@@ -191,9 +191,22 @@ The encryption uses OpenSSL with *AES-256-CBC* and should be [implemented reason
 I'm thinking of adding additional DNS backends to this tool, for example for a local BIND server or GoDaddy. This should be fairly possible using the application structure as it is currently (it'd require adding a new Service for the provider, then somehow defining that as the one to use via Configuration).
 
 ## Developer notes
+**Static strings**
 The code is thoroughly documented and uses practically no hard coded strings - all of them are defined as class constants so you can hardly break anything by changing those fields. 
+
+**Unified infrastructure**
 Basically, the `index.php` file is the entry point for both the web server and the CLI. It determines the SAPI mode and loads the appropriate kernel class. All of this is inspired by Laravel, but nowhere near as complex. Both HTTP routes and CLI commands can be defined in the appropriate `routes` file at `src/routes`, in `web.php` (HTTP) and `console.php` (CLI) respectively.  
+
+**Inheritance**
 There, you'll see both are added using a `Route` class - `WebRoute` and `ConsoleRoute`, which both inherit from `Route`. The whole application is structured like this, with the base class sharing the common properties, constants and methods.  
+
+**Routing**
 In those routes files, you can add your own routes using a simple mechanism: All routes require a `handler`. That is a Controller for web routes and a Command for console routes. This handler needs to be placed in the corresponding directory in the app folder, namely `src/app/Controllers` or `src/app/Commands`. The handler will be resolved by taking the string from the route property, uppercasing the first letter and appending "Console" or "Command" to it. Therefore, a handler named "foo" will be resolved to "FooController" or "FooCommand".  
 You can also add a method by passing `foo@bar`, which will assume `FooController#bar()` as the action handler. If you omit the method, the default `index` will be used.  
+
+**Lambda callback handlers**
 Lastly, there's one specialty - you can also pass a callback instead of a string to the `handler` property. The callback will be wrapped in a special Controller/Command that simply executes the callback. These special handlers are called `LambdaController` and `LambdaCommand` and work practically the same way. They receive the same arguments as all Controllers/Commands do.
+
+**Services and DI**
+The Kernel class provides a minimal DI container implementation that manages service instances. Services are classes serving functionality to both Commands and Controllers, therefore working independently from them. They also have access to the kernel instance via `getKernel()`, so they can use all other services, configuration data and the logger.  
+You can store constructor arguments that will be passed to the service constructor as soon as it is required. Of course there's also a `getFactory()` method to always retrieve a new instance with fresh args. Consumers can load a service using `$this->getKernel()->getService( Namespace\MyService::class )`. Instead of using string identifiers, I chose to go with the actual FQCN here.
