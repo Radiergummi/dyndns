@@ -14,16 +14,22 @@ $config = new Configuration();
  * ------------------------------------------------------------------------------------
  */
 
-// application name as shown on the CLI
-$config->name = 'Cloudflare DynDNS';
-
-// whether to enable debugging
-$config->debug = true;
-
 // IMPORTANT: Application secret. Change this to a random string!
 // You can use the following command to generate one:
 // openssl rand -base64 32
 // $config->secret = '...';
+
+// application name as shown on the CLI
+$config->name = 'Cloudflare DynDNS';
+
+// whether to enable logging
+$config->logEnabled = true;
+
+// where to write the log file to
+$config->logPath = __DIR__ . '/dyndns.log';
+
+// whether to enable debugging
+$config->debug = true;
 
 // Slim configuration options. The `displayErrorDetails` option controls display of
 // errors. Leave it like this to connect the option to the debug setting.
