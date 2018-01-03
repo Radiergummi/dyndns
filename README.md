@@ -7,6 +7,13 @@ Hosting your own DynDNS service usually implies also managing the DNS on your se
 
 This tool allows you to host your own DynDNS server that will proxy any requests to the Cloudflare API. That way, you can easily set up your router to update your record without all of the hassle.
 
+## Features
+
+ - REST API to view and modify DNS records for your zones
+ - CLI application with the same feature set
+ - Transparent on-the-fly encryption of your Cloudflare credentials, no additional accounts
+ - Ready for any router
+
 ## Installation
 
 ### Using composer
