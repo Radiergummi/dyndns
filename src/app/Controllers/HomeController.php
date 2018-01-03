@@ -20,6 +20,7 @@ use function strtoupper;
  */
 class HomeController extends Controller {
 
+  /** @noinspection PhpUnusedParameterInspection */
   /**
    * Shows a list of all API endpoints
    *

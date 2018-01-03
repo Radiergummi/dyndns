@@ -4,7 +4,7 @@ namespace Radiergummi\DynDns\Controllers;
 
 use Radiergummi\DynDns\CloudflareProxyAuthenticator;
 use Radiergummi\DynDns\Controller;
-use Radiergummi\DynDns\Services\Cloudflare;
+use Radiergummi\DynDns\Services\CloudflareService;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Throwable;
@@ -20,12 +20,12 @@ class ZoneController extends Controller {
    * Name of the field for the zone argument in the route path.
    * This needs to conform to the format specified in the routes file.
    */
-  protected const FIELD_ZONE             = 'zone';
+  protected const FIELD_ZONE = 'zone';
 
   /**
    * Error message for failed zone fetch attempts
    */
-  protected const MESSAGE_FETCH_FAILED   = 'Could not fetch zones';
+  protected const MESSAGE_FETCH_FAILED = 'Could not fetch zones';
 
   /**
    * Error message for nonexistent zone names
@@ -44,7 +44,10 @@ class ZoneController extends Controller {
    * @throws \RuntimeException
    */
   public function single( Request $request, Response $response, array $args ): Response {
-    $cloudflare = new Cloudflare(
+
+    /** @var \Radiergummi\DynDns\Services\CloudflareService $cloudflare */
+    $cloudflare = $this->getKernel()->getFactory(
+        CloudflareService::class,
         $request->getAttribute( CloudflareProxyAuthenticator::ATTRIBUTE_USERNAME ),
         $request->getAttribute( CloudflareProxyAuthenticator::ATTRIBUTE_PASSWORD )
     );
@@ -74,7 +77,10 @@ class ZoneController extends Controller {
    * @throws \RuntimeException
    */
   public function index( Request $request, Response $response ): Response {
-    $cloudflare = new Cloudflare(
+
+    /** @var \Radiergummi\DynDns\Services\CloudflareService $cloudflare */
+    $cloudflare = $this->getKernel()->getFactory(
+        CloudflareService::class,
         $request->getAttribute( CloudflareProxyAuthenticator::ATTRIBUTE_USERNAME ),
         $request->getAttribute( CloudflareProxyAuthenticator::ATTRIBUTE_PASSWORD )
     );

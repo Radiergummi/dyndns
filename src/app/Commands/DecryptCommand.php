@@ -3,7 +3,7 @@
 namespace Radiergummi\DynDns\Commands;
 
 use Radiergummi\DynDns\Command;
-use Radiergummi\DynDns\Services\Authentication;
+use Radiergummi\DynDns\Services\AuthenticationService;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -50,10 +50,14 @@ class DecryptCommand extends Command {
    * @param \Symfony\Component\Console\Output\OutputInterface $output
    *
    * @return int|null|void
+   * @throws \InvalidArgumentException
    * @throws \Symfony\Component\Console\Exception\InvalidArgumentException
    */
   public function execute( InputInterface $input, OutputInterface $output ) {
-    $authentication    = new Authentication( $this->getKernel()->getSecret() );
+
+    /** @var \Radiergummi\DynDns\Services\AuthenticationService $authentication */
+    $authentication = $this->getKernel()->getService( AuthenticationService::class );
+
     $cipher            = trim( $input->getArgument( DecryptCommand::ARGUMENT_CIPHER ) );
     $decryptedPassword = $authentication->decrypt( $cipher );
 

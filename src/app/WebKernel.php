@@ -36,6 +36,8 @@ class WebKernel extends Kernel {
 
     // load the authentication middleware
     $this->app->add( new CloudflareProxyAuthenticator( $this ) );
+
+
   }
 
   /**

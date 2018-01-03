@@ -2,6 +2,7 @@
 
 namespace Radiergummi\DynDns\Services;
 
+use Radiergummi\DynDns\Service;
 use RuntimeException;
 use function bin2hex;
 use function hex2bin;
@@ -16,7 +17,7 @@ use function openssl_encrypt;
  * @link    https://stackoverflow.com/a/46872528/2532203
  * @package Radiergummi\DynDns
  */
-class Authentication {
+class AuthenticationService extends Service {
 
   /**
    * Holds the default secret for the application. This ensures the app won't work
@@ -44,14 +45,13 @@ class Authentication {
   /**
    * Authentication constructor
    *
-   * @param string $secret application encryption secret
-   *
    * @throws \RuntimeException
    */
-  public function __construct( string $secret ) {
+  public function __construct() {
+    $secret = $this->getKernel()->getSecret();
 
     // check if the secret has been changed and stop execution otherwise
-    if ( $secret === Authentication::DEFAULT_SECRET ) {
+    if ( $secret === AuthenticationService::DEFAULT_SECRET ) {
       throw new RuntimeException( 'Application secret has not been changed! Please specify a random value to use the API.' );
     }
 
@@ -73,16 +73,16 @@ class Authentication {
     $iv             = substr( $binaryPassword, 0, 16 );
     $hash           = substr( $binaryPassword, 16, 32 );
     $cipherText     = substr( $binaryPassword, 48 );
-    $key            = hash( Authentication::HASHING_ALGORITHM, $this->secret, true );
+    $key            = hash( AuthenticationService::HASHING_ALGORITHM, $this->secret, true );
 
     // if the HMAC hash doesn't match the hash string, something has gone wrong
-    if ( hash_hmac( Authentication::HASHING_ALGORITHM, $cipherText, $key, true ) !== $hash ) {
+    if ( hash_hmac( AuthenticationService::HASHING_ALGORITHM, $cipherText, $key, true ) !== $hash ) {
       return '';
     }
 
     return openssl_decrypt(
         $cipherText,
-        Authentication::ENCRYPTION_ALGORITHM,
+        AuthenticationService::ENCRYPTION_ALGORITHM,
         $key,
         OPENSSL_RAW_DATA,
         $iv
@@ -97,17 +97,17 @@ class Authentication {
    * @return string hex representation of the binary cipher text
    */
   public function encrypt( string $password ): string {
-    $key = hash( Authentication::HASHING_ALGORITHM, $this->secret, true );
+    $key = hash( AuthenticationService::HASHING_ALGORITHM, $this->secret, true );
     $iv  = openssl_random_pseudo_bytes( 16 );
 
     $cipherText = openssl_encrypt(
         $password,
-        Authentication::ENCRYPTION_ALGORITHM,
+        AuthenticationService::ENCRYPTION_ALGORITHM,
         $key,
         OPENSSL_RAW_DATA,
         $iv
     );
-    $hash       = hash_hmac( Authentication::HASHING_ALGORITHM, $cipherText, $key, true );
+    $hash       = hash_hmac( AuthenticationService::HASHING_ALGORITHM, $cipherText, $key, true );
 
     return bin2hex( $iv . $hash . $cipherText );
   }

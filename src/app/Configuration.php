@@ -2,7 +2,7 @@
 
 namespace Radiergummi\DynDns;
 
-use Radiergummi\DynDns\Services\Authentication;
+use Radiergummi\DynDns\Services\AuthenticationService;
 
 /**
  * Configuration class
@@ -32,7 +32,7 @@ class Configuration {
    *
    * @var string
    */
-  public $secret = Authentication::DEFAULT_SECRET;
+  public $secret = AuthenticationService::DEFAULT_SECRET;
 
   /**
    * Whether to put the application in debugging mode. This also affects publicly visible stack traces, so be
@@ -63,6 +63,7 @@ class Configuration {
    */
   public $logEnabled = true;
 
+  /** @noinspection SpellCheckingInspection */
   /**
    * Where to write the log to
    *

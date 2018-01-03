@@ -6,8 +6,8 @@ use Cloudflare\API\Endpoints\EndpointException;
 use GuzzleHttp\Exception\ClientException;
 use Radiergummi\DynDns\CloudflareProxyAuthenticator;
 use Radiergummi\DynDns\Controller;
-use Radiergummi\DynDns\Services\Cloudflare;
-use Radiergummi\DynDns\Services\DynDns;
+use Radiergummi\DynDns\Services\CloudflareService;
+use Radiergummi\DynDns\Services\DynDnsService;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Throwable;
@@ -93,16 +93,19 @@ class HostController extends Controller {
       return $this->withClientError( $response, HostController::MESSAGE_INVALID_IP );
     }
 
-    $cloudflare = new Cloudflare(
+    $this->getKernel()->registerServiceArguments( CloudflareService::class, [
         $request->getAttribute( CloudflareProxyAuthenticator::ATTRIBUTE_USERNAME ),
         $request->getAttribute( CloudflareProxyAuthenticator::ATTRIBUTE_PASSWORD )
-    );
-    $dynDns     = new DynDns( $cloudflare );
+    ] );
+
+    /** @var \Radiergummi\DynDns\Services\DynDnsService $dynDns */
+    $dynDns = $this->getKernel()->getService( DynDnsService::class );
 
     // try to update the DNS record
     try {
       $dynDns->update( $zone, $hostname, $ipv4Address, $ipv6Address );
     }
+      /** @noinspection PhpRedundantCatchClauseInspection */
     catch ( ClientException $exception ) {
       return $this->withClientError( $response, HostController::MESSAGE_UPDATE_FAILED, $exception );
     }
@@ -128,7 +131,9 @@ class HostController extends Controller {
     $zone     = $args[ HostController::FIELD_ZONE ];
     $hostname = $args[ HostController::FIELD_HOSTNAME ];
 
-    $cloudflare = new Cloudflare(
+    /** @var \Radiergummi\DynDns\Services\CloudflareService $cloudflare */
+    $cloudflare = $this->getKernel()->getFactory(
+        CloudflareService::class,
         $request->getAttribute( CloudflareProxyAuthenticator::ATTRIBUTE_USERNAME ),
         $request->getAttribute( CloudflareProxyAuthenticator::ATTRIBUTE_PASSWORD )
     );

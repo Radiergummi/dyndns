@@ -165,7 +165,7 @@ abstract class Controller {
    * @throws \RuntimeException
    */
   protected function withSuccess( Response $response, $data ): Response {
-    $this->getKernel()->logInfo( $data );
+    $this->getKernel()->logInfo( (string) $data );
 
     return $response
         ->withStatus( 200 )

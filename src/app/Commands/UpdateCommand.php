@@ -3,8 +3,8 @@
 namespace Radiergummi\DynDns\Commands;
 
 use Radiergummi\DynDns\Command;
-use Radiergummi\DynDns\Services\Cloudflare;
-use Radiergummi\DynDns\Services\DynDns;
+use Radiergummi\DynDns\Services\CloudflareService;
+use Radiergummi\DynDns\Services\DynDnsService;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -158,8 +158,13 @@ class UpdateCommand extends Command {
     $ipv4Address = $input->getOption( UpdateCommand::OPTION_IPV4_ADDRESS ) ?? null;
     $ipv6Address = $input->getOption( UpdateCommand::OPTION_IPV6_ADDRESS ) ?? null;
 
-    $cloudflare = new Cloudflare( $username, $password );
-    $dynDns     = new DynDns( $cloudflare );
+    $this->getKernel()->registerServiceArguments( CloudflareService::class, [
+        $username,
+        $password
+    ] );
+
+    /** @var \Radiergummi\DynDns\Services\DynDnsService $dynDns */
+    $dynDns = $this->getKernel()->getService( DynDnsService::class );
 
     try {
       $dynDns->update( $zone, $hostname, $ipv4Address, $ipv6Address );

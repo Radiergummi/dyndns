@@ -6,6 +6,7 @@ use Cloudflare\API\Adapter\Guzzle;
 use Cloudflare\API\Auth\APIKey;
 use Cloudflare\API\Endpoints\DNS;
 use Cloudflare\API\Endpoints\Zones;
+use Radiergummi\DynDns\Service;
 use stdClass;
 
 /**
@@ -17,7 +18,7 @@ use stdClass;
  *
  * @package Radiergummi\DynDns
  */
-class Cloudflare {
+class CloudflareService extends Service {
 
   /**
    * A (IPv4) DNS Record
@@ -105,7 +106,7 @@ class Cloudflare {
       string $recordName,
       string $content,
       int $ttl = 1,
-      bool $proxied = Cloudflare::PROXY_RECORDS
+      bool $proxied = CloudflareService::PROXY_RECORDS
   ) {
     $this->dns->addRecord( $this->getZoneId( $zoneName ), $recordType, $recordName, $content, $ttl, $proxied );
   }
@@ -141,7 +142,7 @@ class Cloudflare {
       string $recordName,
       string $content,
       int $ttl = 1,
-      bool $proxied = Cloudflare::PROXY_RECORDS
+      bool $proxied = CloudflareService::PROXY_RECORDS
   ) {
     $record = $this->getRecord( $zoneName, $recordName );
     $this->dns->updateRecordDetails( $this->getZoneId( $zoneName ), $record->id, [

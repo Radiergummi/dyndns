@@ -2,7 +2,7 @@
 
 namespace Radiergummi\DynDns;
 
-use Radiergummi\DynDns\Services\Authentication;
+use Radiergummi\DynDns\Services\AuthenticationService;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -34,7 +34,7 @@ class CloudflareProxyAuthenticator {
   /**
    * Holds the Authentication instance
    *
-   * @var \Radiergummi\DynDns\Services\Authentication
+   * @var \Radiergummi\DynDns\Services\AuthenticationService
    */
   protected $authentication;
 
@@ -58,10 +58,12 @@ class CloudflareProxyAuthenticator {
    * @param \Radiergummi\DynDns\Kernel $kernel     app kernel
    * @param array                      $exceptions list of paths to not be authorized
    * @param string                     $realm      authentication realm as shown in the dialog
+   *
+   * @throws \InvalidArgumentException
    */
   public function __construct( Kernel $kernel, array $exceptions = [], string $realm = '' ) {
     $this->kernel         = $kernel;
-    $this->authentication = new Authentication( $this->kernel->getConfig()->secret );
+    $this->authentication = $this->kernel->getService( AuthenticationService::class);
     $this->exceptions     = $exceptions;
     $this->realm          = $this->kernel->getConfig()->name;
   }
