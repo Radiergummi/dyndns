@@ -9,6 +9,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Throwable;
 
 /**
  * Update Command
@@ -41,6 +42,11 @@ class UpdateCommand extends Command {
    * Command description
    */
   protected const DESCRIPTION = 'Updates the DynDNS record';
+
+  /**
+   * Success message for successful DNS record update attempts
+   */
+  protected const MESSAGE_UPDATE_SUCCEEDED = 'Updated DynDNS record for {hostname} successfully to "{ipv4}" (IPv4) / "{ipv6}" (IPv6)';
 
   /**
    * IPv4 address option
@@ -141,8 +147,8 @@ class UpdateCommand extends Command {
    * @param \Symfony\Component\Console\Output\OutputInterface $output
    *
    * @return int|null|void
-   * @throws \Cloudflare\API\Endpoints\EndpointException
    * @throws \Symfony\Component\Console\Exception\InvalidArgumentException
+   * @throws \Throwable
    */
   public function execute( InputInterface $input, OutputInterface $output ) {
     $username    = $input->getOption( UpdateCommand::OPTION_USERNAME );
@@ -155,6 +161,18 @@ class UpdateCommand extends Command {
     $cloudflare = new Cloudflare( $username, $password );
     $dynDns     = new DynDns( $cloudflare );
 
-    $dynDns->update( $zone, $hostname, $ipv4Address, $ipv6Address );
+    try {
+      $dynDns->update( $zone, $hostname, $ipv4Address, $ipv6Address );
+    }
+    catch ( Throwable $exception ) {
+      $this->getKernel()->logError( $exception->getMessage() );
+      throw $exception;
+    }
+
+    $this->getKernel()->logInfo( UpdateCommand::MESSAGE_UPDATE_SUCCEEDED, [
+        'hostname' => $hostname,
+        'ipv4'     => $ipv4Address,
+        'ipv6'     => $ipv6Address
+    ] );
   }
 }

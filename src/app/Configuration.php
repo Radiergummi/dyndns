@@ -55,4 +55,18 @@ class Configuration {
    * @var array
    */
   public $slimConfiguration = [];
+
+  /**
+   * Whether logging is enabled
+   *
+   * @var bool
+   */
+  public $logEnabled = true;
+
+  /**
+   * Where to write the log to
+   *
+   * @var string
+   */
+  public $logPath = 'dyndns.log';
 }

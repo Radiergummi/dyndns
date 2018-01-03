@@ -43,6 +43,22 @@ abstract class Controller {
   protected $kernel;
 
   /**
+   * Shorthand method for 404 errors
+   *
+   * @param \Slim\Http\Response $response
+   * @param string              $message
+   *
+   * @return \Slim\Http\Response
+   * @throws \InvalidArgumentException
+   * @throws \RuntimeException
+   */
+  protected function notFound( Response $response, string $message ): Response {
+    $this->getKernel()->logWarning( $message );
+
+    return $this->withError( $response, 404, $message );
+  }
+
+  /**
    * Retrieves the kernel instance for this application
    *
    * @return \Radiergummi\DynDns\Kernel
@@ -60,20 +76,6 @@ abstract class Controller {
    */
   public function setKernel( Kernel $kernel ) {
     $this->kernel = $kernel;
-  }
-
-  /**
-   * Shorthand method for 404 errors
-   *
-   * @param \Slim\Http\Response $response
-   * @param string              $message
-   *
-   * @return \Slim\Http\Response
-   * @throws \InvalidArgumentException
-   * @throws \RuntimeException
-   */
-  protected function notFound( Response $response, string $message ): Response {
-    return $this->withError( $response, 404, $message );
   }
 
   /**
@@ -97,6 +99,8 @@ abstract class Controller {
     if ( $exception instanceof ClientException || $exception instanceof EndpointException ) {
       $status = $exception->getResponse()->getStatusCode();
     }
+
+    $this->getKernel()->logError( $message . ': ' . $exception->getMessage() );
 
     return $response
         ->withStatus( $status )
@@ -161,6 +165,8 @@ abstract class Controller {
    * @throws \RuntimeException
    */
   protected function withSuccess( Response $response, $data ): Response {
+    $this->getKernel()->logInfo( $data );
+
     return $response
         ->withStatus( 200 )
         ->withJson( [

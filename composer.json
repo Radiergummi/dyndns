@@ -6,7 +6,8 @@
         "slim/slim": "^3.9",
         "symfony/console": "^4.0",
         "tuupola/slim-basic-auth": "^2.3",
-        "cloudflare/sdk": "^1.0"
+        "cloudflare/sdk": "^1.0",
+        "monolog/monolog": "^1.23"
     },
     "autoload": {
       "psr-4": {

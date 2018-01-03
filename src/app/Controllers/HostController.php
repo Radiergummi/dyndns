@@ -23,43 +23,43 @@ class HostController extends Controller {
    * Field for the hostname argument in the route path.
    * This needs to conform to the format specified in the routes file.
    */
-  public const    FIELD_HOSTNAME           = 'hostname';
+  public const    FIELD_HOSTNAME = 'hostname';
 
   /**
    * Field for the IPv4 address in the body or GET parameter.
    */
-  public const    FIELD_IPV4               = 'ipv4';
+  public const    FIELD_IPV4 = 'ipv4';
 
   /**
    * Field for the IPv6 address in the body or GET parameter.
    */
-  public const    FIELD_IPV6               = 'ipv6';
+  public const    FIELD_IPV6 = 'ipv6';
 
   /**
    * Field for the zone argument in the route path.
    * This needs to conform to the format specified in the routes file.
    */
-  public const    FIELD_ZONE               = 'zone';
+  public const    FIELD_ZONE = 'zone';
 
   /**
    * Error message for failed DNS record fetch attempts
    */
-  protected const MESSAGE_FETCH_FAILED     = 'Could not fetch DNS record';
+  protected const MESSAGE_FETCH_FAILED = 'Could not fetch DNS record';
 
   /**
    * Error message for nonexistent host names
    */
-  protected const MESSAGE_HOST_NOT_FOUND   = 'Host not found';
+  protected const MESSAGE_HOST_NOT_FOUND = 'Host not found';
 
   /**
    * Error message for invalid or no IP addresses
    */
-  protected const MESSAGE_INVALID_IP       = 'Invalid IP address supplied';
+  protected const MESSAGE_INVALID_IP = 'Invalid IP address supplied';
 
   /**
    * Error message for failed DNS record update attempts
    */
-  protected const MESSAGE_UPDATE_FAILED    = 'Could not update DNS record';
+  protected const MESSAGE_UPDATE_FAILED = 'Could not update DNS record';
 
   /**
    * Success message for successful DNS record update attempts
