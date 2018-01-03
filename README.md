@@ -13,6 +13,7 @@ This tool allows you to host your own DynDNS server that will proxy any requests
  - CLI application with the same feature set
  - Transparent on-the-fly encryption of your Cloudflare credentials, no additional accounts
  - Ready for any router
+ - Handles IPv4 and/or IPv6 addresses
 
 ## Installation
 
@@ -90,18 +91,18 @@ Open up your terminal and navigate to the application directory. There, execute 
 bin/dyndns auth:encrypt {{your api key}}
 ```
 
-I promise you that this command won't ever transmit your API key to anywhere outside of your server, it only encrypts it using OpenSSL. Never trust random dudes on the internet, though: Feel free to inspect the [command source](./src/app/Commands/EncryptCommand.php) to find out what this command actually does. The code is well documented.
+I promise you that this command won't ever transmit your API key to anywhere outside of your server, it only encrypts it using OpenSSL. Never trust random dudes on the internet, though: Feel free to inspect the [command source](./src/app/Commands/EncryptCommand.php) to find out what it actually does. The code is well documented.
 
-The command will print your encrypted token to the console. It might be pretty long, but that doesn't matter. Note it down somewhere. In case you loose that string, don't worry: You can always encrypt our API key again. If you do so, the encrypted string will look completely different, but still work. Magic :)
+The command will print your encrypted token to the console. It might be pretty long, but that doesn't matter. Note it down somewhere. In case you loose that string, don't worry: You can always encrypt your API key again. If you do so, the encrypted string will look completely different, but still work. Magic :)
 
 > Pro tip: If you intend to automate this, simply pass the `-q` switch. That will suppress anything but the plain text encrypted key.
 
 ### Try it out
 Now that you have your encrypted key (we'll call that your *password* from now on), you can already update the DNS record for your DynDNS domain using your web browser. The URL looks like so:
 
-```
-{{your-dyndns-server.com}}/zones/{{your-cloudflare-zone}}/{{your-home-domain}}/update?ipv4={{new-ip-address}}
-```
+<pre>
+https://<b>your-dyndns-server.com</b>/zones/<b>{{your-cloudflare-zone}}</b>/<b>{{your-home-domain}}</b>/update?ipv4=<b>{{new-ip-address}}</b>
+</pre>
 
 Replace the values in brackets with your actual data:
  - `your-dyndns-server.com` is the domain where this application runs
@@ -125,9 +126,9 @@ The last step is updating your router configuration. This largely depends on wha
 
 Most routers have a field called `Update-URL` or similar, and some placeholders to insert in that URL. Make sure it looks more or less like this:
 
-```
-https://{{your-dyndns-server.com}}/zones/{{your-cloudflare-zone}}/{{your-home-domain}}/update?ipv4={{new-ipv4-address}}&ipv6={{new-ipv6-address}}
-```
+<pre>
+https://<b>your-dyndns-server.com</b>/zones/<b>{{your-cloudflare-zone}}</b>/<b>{{your-home-domain}}</b>/update?ipv4=<b>{{new-ip-address}}</b>&ipv6=<b>{{new-ipv6-address}}</b>
+</pre>
 
 Fill the username and password fields just like you did in the basic authentication field above.
 
