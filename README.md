@@ -185,7 +185,7 @@ Then, the API token. I went down the path of encryption to make sure you could *
 Even then, you should be careful with both your API key and the app secret. It's what protects you from someone manipulating your DNS, potentially causing real damage to you.
 
 ## Encryption details
-The encryption uses OpenSSL with *AES-256-CBC* and should be [implemented reasonably secure](./src/app/Services/Authentication.php). Due to the usage of initialization vectors (IVs), you will receive different output each time you encrypt the same key. That's expected and well. Each of those ciphers will decrypt to your original key.
+The encryption uses OpenSSL with *AES-256-CBC* and should be [implemented reasonably secure](./src/app/Services/AuthenticationService.php). Due to the usage of initialization vectors (IVs), you will receive different output each time you encrypt the same key. That's expected and well. Each of those ciphers will decrypt to your original key.
 
 ## Future development
 I'm thinking of adding additional DNS backends to this tool, for example for a local BIND server or GoDaddy. This should be fairly possible using the application structure as it is currently (it'd require adding a new Service for the provider, then somehow defining that as the one to use via Configuration).
@@ -209,4 +209,4 @@ Lastly, there's one specialty - you can also pass a callback instead of a string
 
 **Services and DI**
 The Kernel class provides a minimal DI container implementation that manages service instances. Services are classes serving functionality to both Commands and Controllers, therefore working independently from them. They also have access to the kernel instance via `getKernel()`, so they can use all other services, configuration data and the logger.  
-You can store constructor arguments that will be passed to the service constructor as soon as it is required. Of course there's also a `getFactory()` method to always retrieve a new instance with fresh args. Consumers can load a service using `$this->getKernel()->getService( Namespace\MyService::class )`. Instead of using string identifiers, I chose to go with the actual FQCN here.
+You can store constructor arguments that will be passed to the service constructor as soon as it is required. The kernel will create instances on the first request and serve it on any follow up requests. Of course there's also a `getFactory()` method to always retrieve a new instance with fresh args. Consumers can load a service using `$this->getKernel()->getService( Namespace\MyService::class )`. Instead of using string identifiers, I chose to go with the actual FQCN here.
